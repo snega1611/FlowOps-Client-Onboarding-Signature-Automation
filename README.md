@@ -8,11 +8,11 @@ The main problem it addresses is fragmented onboarding: document checks, client 
 
 **Workflow 1 — Client Onboarding**
 
-![Workflow 1 — Client Onboarding](images/workflow-1.png)
+![Workflow 1 — Client Onboarding](images/workflow_1.png)
 
 **Workflow 2 — Signature Monitoring & Auto-Completion**
 
-![Workflow 2 — Signature Monitoring](images/workflow-2.png)
+![Workflow 2 — Signature Monitoring](images/workflow_2.png)
 
 ## Architecture
 
