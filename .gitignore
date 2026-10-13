@@ -1,0 +1,39 @@
+
+# LLM and agent graph files no longer needed
+app/llm.py
+app/agent/graph.py
+
+# Generated test documents
+test_documents/
+tests/
+reports/
+generate_documents.py
+evaluation/dataset
+data/generated/
+data/uploads/
+data/fixtures/
+reset_test_data.py
+
+# Local databases
+data/*.db
+data/*.db-*
+
+# Credentials and environment secrets
+.env
+.env.*
+!.env.example
+credentials.json
+token.json
+
+# Crash logs
+*.log
+hs_err_pid*
+replay_pid*
+
+# Python and test caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+

@@ -1,0 +1,43 @@
+from __future__ import annotations
+
+from enum import Enum
+
+
+class CaseState(str, Enum):
+    NEW = "NEW"
+    AWAITING_INFO = "AWAITING_INFO"
+    AWAITING_DOCUMENTS = "AWAITING_DOCUMENTS"
+    DOCUMENT_REVIEW = "DOCUMENT_REVIEW"
+    AWAITING_SIGNATURE = "AWAITING_SIGNATURE"
+    SIGNED = "SIGNED"
+    COMPLETED = "COMPLETED"
+    STALLED = "STALLED"
+    NEEDS_HUMAN = "NEEDS_HUMAN"
+    CLOSED = "CLOSED"
+
+
+S = CaseState
+_WORKING = {S.AWAITING_INFO, S.AWAITING_DOCUMENTS, S.DOCUMENT_REVIEW, S.AWAITING_SIGNATURE}
+ALLOWED: dict[CaseState, set[CaseState]] = {
+    S.NEW: {S.AWAITING_INFO, S.AWAITING_DOCUMENTS, S.NEEDS_HUMAN, S.CLOSED},
+    S.AWAITING_INFO: (_WORKING - {S.AWAITING_INFO}) | {S.STALLED, S.NEEDS_HUMAN, S.CLOSED},
+    S.AWAITING_DOCUMENTS: (_WORKING - {S.AWAITING_DOCUMENTS}) | {S.STALLED, S.NEEDS_HUMAN, S.CLOSED},
+    S.DOCUMENT_REVIEW: (_WORKING - {S.DOCUMENT_REVIEW}) | {S.STALLED, S.NEEDS_HUMAN, S.CLOSED},
+    S.AWAITING_SIGNATURE: (_WORKING - {S.AWAITING_SIGNATURE}) | {S.SIGNED, S.STALLED, S.NEEDS_HUMAN, S.CLOSED},
+    S.SIGNED: {S.COMPLETED, S.NEEDS_HUMAN, S.AWAITING_DOCUMENTS, S.CLOSED},
+    S.STALLED: _WORKING | {S.NEEDS_HUMAN, S.CLOSED},
+    S.NEEDS_HUMAN: _WORKING | {S.SIGNED, S.STALLED, S.CLOSED},
+    S.COMPLETED: set(),
+    S.CLOSED: set(),
+}
+TERMINAL = {S.COMPLETED, S.CLOSED}
+
+
+class InvalidTransition(Exception):
+    pass
+
+
+def check_transition(old: str, new: str) -> None:
+    o, n = CaseState(old), CaseState(new)
+    if n not in ALLOWED[o]:
+        raise InvalidTransition(f"{o.value} -> {n.value} is not allowed")
